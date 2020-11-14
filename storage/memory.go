@@ -3,6 +3,7 @@ package storage
 import (
 	"sort"
 	"sync"
+	"time"
 	"users-api/models"
 )
 
@@ -55,6 +56,7 @@ func (i inMemoryStorage) Store(newUser *models.User) (newId int, err error) {
 
 	newId = len(i.storage) + 1
 	newUser.ID = newId
+	newUser.CreatedAt = time.Now()
 
 	i.storage[newId] = newUser
 	return

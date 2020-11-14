@@ -3,12 +3,14 @@ package models
 import (
 	"errors"
 	"net/http"
+	"time"
 )
 
 type User struct {
-	ID    int    `json:"id"`
-	First string `json:"first"`
-	Last  string `json:"last"`
+	ID        int       `json:"id"`
+	First     string    `json:"first"`
+	Last      string    `json:"last"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type UserStorage interface {

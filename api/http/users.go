@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
 	"users-api/models"
@@ -69,13 +70,19 @@ func (s *Server) addUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	exist, _ := s.Storage.UserExist(user)
+	exist, err := s.Storage.UserExist(user)
+	if err != nil {
+		logrus.WithError(err).Fatal("checking if user exist")
+		JSONError(w, r, http.StatusInternalServerError, "error checking if user exist")
+		return
+	}
+
 	if exist {
 		JSONError(w, r, http.StatusBadRequest, "user already exist")
 		return
 	}
 
-	_, err := s.Storage.Store(user)
+	_, err = s.Storage.Store(user)
 	if err != nil {
 		JSONError(w, r, http.StatusBadRequest, err.Error())
 		return
