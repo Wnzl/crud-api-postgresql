@@ -13,5 +13,6 @@ WORKDIR /srv
 
 COPY --from=builder /app/main /srv
 COPY --from=builder /app/.env /srv
+COPY --from=builder /app/storage/migrations /srv/storage/migrations
 EXPOSE 8080
 ENTRYPOINT ["./main"]

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"errors"
 	"github.com/joho/godotenv"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"os"
 	"strconv"
@@ -47,13 +47,16 @@ func getStorageDriver() (driver models.UserStorage, err error) {
 			logrus.WithError(err).Fatal("Converting port to int")
 		}
 
-		driver = storage.NewPostgreSqlStorage(storage.Config{
+		driver, err = storage.NewPostgreSqlStorage(storage.Config{
 			Username:     os.Getenv(dbUsernameEnv),
 			Password:     os.Getenv(dbPasswordEnv),
 			DatabaseName: os.Getenv(dbNameEnv),
 			Host:         os.Getenv(dbHostEnv),
 			Port:         port,
 		})
+		if err != nil {
+			panic(errors.Wrapf(err, "connecting to database"))
+		}
 	default:
 		err = errors.New("unknown database driver, check your .env file")
 	}

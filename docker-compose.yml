@@ -1,12 +1,15 @@
 version: '3.7'
 services:
   database:
-    image: postgres:latest
+    image: postgres
     restart: always
+    environment:
+      - POSTGRES_USER=${DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
     ports:
       - "5432:5432"
-    volumes:
-      - data:/var/lib/postgresql/data
+
   server:
     build:
       context: .
@@ -17,5 +20,3 @@ services:
       - default
     ports:
       - "8080:8080"
-volumes:
-  data:
